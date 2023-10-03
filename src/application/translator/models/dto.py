@@ -1,15 +1,14 @@
-from dataclasses import dataclass
-from datetime import datetime
+from dataclasses import dataclass, field
+from datetime import datetime, timedelta
 from typing import List
 
 
 @dataclass(frozen=True)
-class TranslationResult:
+class TranslationResultDTO:
     text: str
-    datetime_of_translation: datetime
+    datetime_of_translation: datetime = field(default_factory=datetime.utcnow)
 
 
 @dataclass(frozen=True)
-class TranslationHistory:
-    messages: List[TranslationResult]
-
+class TranslationHistoryDTO:
+    messages: List[TranslationResultDTO]

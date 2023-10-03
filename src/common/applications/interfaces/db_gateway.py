@@ -1,7 +1,7 @@
 from typing import Protocol
 
 
-class BaseDBGateway(Protocol):
+class IDBGateway(Protocol):
 
     async def commit(self):
         raise NotImplemented

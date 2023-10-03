@@ -2,5 +2,6 @@ from dataclasses import dataclass
 
 
 @dataclass(frozen=True)
-class AccessDTO:
+class UserInfoDTO:
     user_id: int
+
