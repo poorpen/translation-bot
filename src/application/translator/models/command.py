@@ -5,4 +5,4 @@ from datetime import datetime
 @dataclass(frozen=True)
 class TranslationMessage:
     text: str
-    target_land: str = field(default='RU')
+    target_lang: str = field(default='RU')

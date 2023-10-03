@@ -22,7 +22,7 @@ class TranslateMessageCommand:
     async def __call__(self, command_data: TranslationMessage) -> TranslationResultDTO:
         user_info = self.identity_provider.get_access_policy()
 
-        result = await self.translator.translate(text=command_data.text, target_land=command_data.target_land)
+        result = await self.translator.translate(text=command_data.text, target_lang=command_data.target_lang)
 
         try:
             await self.db_gateway.repo.add_translation(
