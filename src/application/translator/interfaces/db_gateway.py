@@ -5,5 +5,5 @@ from .reader import IHistoryReader
 
 
 class IHistoryDBGateway(IDBGateway):
-    repo: IHistoryRepo
-    reader: IHistoryReader
+    history_repo: IHistoryRepo
+    history_reader: IHistoryReader

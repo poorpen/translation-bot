@@ -1,10 +1,7 @@
-class EmptyMessage(Exception):
-
-    def message(self) -> str:
-        return "Вы отравили пустое сообщение."
+from src.common.applications.exceptions import ApplicationError
 
 
-class MessageLimitExceeded(Exception):
+class MessageLimitExceeded(ApplicationError):
 
     def message(self) -> str:
         return "Длина отправленного вами сообщения превышает допустимое."
