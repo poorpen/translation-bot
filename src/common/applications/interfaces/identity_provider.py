@@ -5,5 +5,5 @@ from src.common.applications.models.dto import UserInfoDTO
 
 class IIdentityProvider(Protocol):
 
-    def get_access_policy(self) -> UserInfoDTO:
+    def get_identification_data(self) -> UserInfoDTO:
         raise NotImplemented
