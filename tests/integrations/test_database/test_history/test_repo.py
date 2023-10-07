@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.common.adapters.database.exceptions import RepoError
 from src.adapters.database.models.translator.translation_history import translation_table
-from src.adapters.database.repositories.translator.repo import HistoryRepo
+from src.adapters.database.repositories.history.repo import HistoryRepo
 
 from tests.integrations.test_database.conftest import session
 

@@ -23,7 +23,11 @@ class TranslateMessageCommand:
     async def __call__(self, command_data: TranslationMessage) -> TranslatedMessageDTO:
         user_info = self.identity_provider.get_identification_data()
 
-        result = await self.translator.translate(text=command_data.text, target_lang=command_data.target_lang)
+        result = await self.translator.translate(
+            text=command_data.text,
+            target_lang=command_data.target_lang,
+            source_lang=command_data.source_lang
+        )
 
         try:
             await self.db_gateway.history_repo.add_translation(
@@ -33,7 +37,8 @@ class TranslateMessageCommand:
                 datetime_of_translation=result.datetime_of_translation
             )
             await self.db_gateway.commit()
-        except ApplicationError:
+        except ApplicationError as exc:
             await self.db_gateway.rollback()
+            raise exc
 
         return result

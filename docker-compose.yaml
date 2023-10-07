@@ -1,0 +1,66 @@
+version: "3.8"
+
+services:
+
+  database:
+    container_name: postgres_database
+    image: "postgres:15"
+    environment:
+      - POSTGRES_USER=db_user
+      - POSTGRES_PASSWORD=db_password
+      - POSTGRES_DB=db_name
+    volumes:
+      - /var/lib/postgresql-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    ports:
+      - "5435:5432"
+    networks:
+      - translation-bot.postgres.network
+
+  database_migrations:
+    container_name: database-migrations
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - DBMS=postgresql
+        - DRIVER=asyncpg
+        - DB_NAME=db_name
+        - DB_USER=db_user
+        - DB_PASSWORD=db_password
+        - DB_HOST=db_host # default localhost
+        - DB_PORT=db_port # default 5432
+    restart: on-failure
+    networks:
+      - translation-bot.postgres.network
+    depends_on:
+      - database
+    volumes:
+      - ./src/adapters/database/migrations:/translation_bot/src/adapters/database/migrations
+    command: [ "python", "-m", "alembic", "upgrade", "head" ]
+
+
+  telegram_bot:
+    container_name: translation-bot
+    build:
+      context: .
+    environment:
+      - BOT_TOKEN=bot_token
+      - AUTH_KEY=deepl_auth_key
+      - DBMS=postgresql
+      - DRIVER=asyncpg
+      - DB_NAME=db_name
+      - DB_USER=db_user
+      - DB_PASSWORD=db_password
+      - DB_HOST=db_host # default localhost
+      - DB_PORT=db_port # default 5432
+    restart: unless-stopped
+    networks:
+      - translation-bot.postgres.network
+    depends_on:
+      - database
+      - database_migrations
+
+networks:
+  translation-bot.postgres.network:
+    driver: bridge

@@ -1,0 +1,36 @@
+FROM python:3.11
+
+ARG DBMS
+ARG DRIVER
+ARG DB_NAME
+ARG DB_USER
+ARG DB_PASSWORD
+ARG DB_HOST
+ARG DB_PORT
+
+ENV PIP_NO_CACHE_DIR=off\
+   PIP_DISABLE_PIP_VERSION_CHECK=on\
+   POETRY_VERSION=1.6.1\
+   DBMS=$DBMS\
+   DRIVER=$DRIVER\
+   DB_NAME=$DB_NAME\
+   DB_USER=$DB_USER\
+   DB_PASSWORD=$DB_PASSWORD\
+   DB_HOST=$DB_HOST\
+   DB_PORT=$DB_PORT
+
+RUN pip install "poetry==$POETRY_VERSION"
+
+WORKDIR translation_bot
+COPY pyproject.toml poetry.lock /translation_bot/
+COPY alembic.bash /translation_bot/
+COPY alembic.ini /translation_bot/
+COPY ./src /translation_bot/src
+
+RUN poetry config virtualenvs.create false
+RUN poetry install --no-dev
+
+RUN sed -i "s|sqlalchemy.url = .*|sqlalchemy.url =  \
+    $DBMS+$DRIVER://$DB_USER:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_NAME|" "alembic.ini"
+
+CMD ["python3.11", "-m", "src"]

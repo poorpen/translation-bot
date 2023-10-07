@@ -4,17 +4,18 @@ from src.application.translator.interfaces.translator import ITranslator
 from src.application.translator.models.dto import TranslatedMessageDTO
 from src.application.translator.exceptions import MessageLimitExceeded
 
-from src.adapters.translator.converters import to_result
-from src.adapters.translator.exceptions import TooManyRequest, QuotaExceeded, TranslationError
+from .converters import to_result
+from .exceptions import TooManyRequest, QuotaExceeded, TranslationError
+from .config import TranslatorConfig
 
 
 class DeepLTranslator(ITranslator):
 
-    def __init__(self, auth_key: str, pro: bool = False):
-        self._client = self._parametrize_client(auth_key, pro)
+    def __init__(self, config: TranslatorConfig):
+        self._client = self._parametrize_client(config.auth_key, config.pro)
 
-    async def translate(self, text: str, target_lang: str) -> TranslatedMessageDTO:
-        data = {"text": [text], "target_lang": target_lang}
+    async def translate(self, text: str, target_lang: str, source_lang: str) -> TranslatedMessageDTO:
+        data = {"text": [text], "target_lang": target_lang, "source_lang": source_lang}
         resp = await self._client.post("/v2/translate", json=data)
         self._check_code(resp.status)
         resp_data = await resp.json()
