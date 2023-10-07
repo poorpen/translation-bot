@@ -21,15 +21,15 @@ services:
     container_name: database-migrations
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile-migrations
       args:
         - DBMS=postgresql
         - DRIVER=asyncpg
         - DB_NAME=db_name
         - DB_USER=db_user
         - DB_PASSWORD=db_password
-        - DB_HOST=db_host # default localhost
-        - DB_PORT=db_port # default 5432
+        - DB_HOST=database
+        - DB_PORT=5432
     restart: on-failure
     networks:
       - translation-bot.postgres.network
@@ -37,7 +37,6 @@ services:
       - database
     volumes:
       - ./src/adapters/database/migrations:/translation_bot/src/adapters/database/migrations
-    command: [ "python", "-m", "alembic", "upgrade", "head" ]
 
 
   telegram_bot:
@@ -52,8 +51,8 @@ services:
       - DB_NAME=db_name
       - DB_USER=db_user
       - DB_PASSWORD=db_password
-      - DB_HOST=db_host # default localhost
-      - DB_PORT=db_port # default 5432
+      - DB_HOST=database
+      - DB_PORT=5432
     restart: unless-stopped
     networks:
       - translation-bot.postgres.network
