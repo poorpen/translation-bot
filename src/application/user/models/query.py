@@ -1,0 +1,2 @@
+class CheckExist:
+    pass

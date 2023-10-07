@@ -32,11 +32,11 @@ class UserRepo(SQLAlchemyRepo, IUserRepo):
         try:
             await self._session.execute(stmt)
         except IntegrityError as exc:
-            self._error_parser(exc)
+            raise self._error_parser(exc)
 
     @staticmethod
     def _error_parser(exc: IntegrityError) -> ApplicationError:
         field = exc.__cause__.__cause__.constraint_name
         match field:
             case "users_pkey":
-                raise UserAlreadyExists()
+                return UserAlreadyExists()

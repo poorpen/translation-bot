@@ -3,14 +3,14 @@ from src.common.applications.exceptions import ApplicationError
 from src.common.applications.interfaces.identity_provider import IIdentityProvider
 
 from src.application.user.models.command import AddUser
-from src.application.user.interfaces.db_gateway import IUserDBGateWay
+from src.application.user.interfaces.db_gateway import IUserDBGateway
 
 
 class AddUserCommand:
 
     def __init__(
             self,
-            db_gateway: IUserDBGateWay,
+            db_gateway: IUserDBGateway,
             identity_provider: IIdentityProvider
     ):
         self.db_gateway = db_gateway
@@ -28,5 +28,6 @@ class AddUserCommand:
 
             )
             await self.db_gateway.commit()
-        except ApplicationError:
+        except ApplicationError as exc:
             await self.db_gateway.rollback()
+            raise exc

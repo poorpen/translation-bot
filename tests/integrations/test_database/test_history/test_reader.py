@@ -9,7 +9,7 @@ from faker import Faker
 
 from src.application.translator.models.dto import TranslationHistoryDTO, TranslationRecordDTO
 from src.adapters.database.models.translator.translation_history import translation_table
-from src.adapters.database.repositories.translator.reader import HistoryReader
+from src.adapters.database.repositories.history.reader import HistoryReader
 
 from tests.integrations.test_database.conftest import session
 

@@ -13,7 +13,7 @@ from src.common.applications.exceptions import ApplicationError
 
 from src.application.translator.models.dto import TranslatedMessageDTO
 from src.application.translator.exceptions import MessageLimitExceeded
-from src.adapters.translator.translator import DeepLTranslator
+from src.adapters.translator import DeepLTranslator, TranslatorConfig
 from src.adapters.translator.exceptions import TooManyRequest, QuotaExceeded, TranslationError
 
 
@@ -55,7 +55,7 @@ async def fake_client(aiohttp_client: Callable, translation_result: Callable[[..
 async def translator(fake_client: TestClient) -> DeepLTranslator:
     with mock.patch('src.adapters.translator.translator.ClientSession') as mock_client:
         mock_client.return_value = fake_client
-        deepl = DeepLTranslator("key")
+        deepl = DeepLTranslator(TranslatorConfig("key"))
         async with deepl as d:
             yield d
 
@@ -65,7 +65,7 @@ async def test_valid_translate(translator: DeepLTranslator, translated_text: str
     frozen_datetime = datetime.datetime(2023, 1, 1)
     with mock.patch("src.application.translator.models.dto.datetime") as mock_datetime:
         mock_datetime.utcnow.return_value = frozen_datetime
-        res = await translator.translate('some_text', 'ru')
+        res = await translator.translate('some_text', 'RU', "EN")
         assert res == TranslatedMessageDTO(translated_text, frozen_datetime)
 
 
@@ -80,4 +80,4 @@ async def test_valid_translate(translator: DeepLTranslator, translated_text: str
 )
 async def test_invalid_translate(translator: DeepLTranslator, code: str, exc: Type[ApplicationError]):
     with pytest.raises(exc):
-        await translator.translate(code, target_lang="RU")
+        await translator.translate(code, target_lang="RU", source_lang="EN")
