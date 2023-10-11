@@ -21,7 +21,7 @@ class TranslateMessageCommand:
         self.identity_provider = identity_provider
 
     async def __call__(self, command_data: TranslationMessage) -> TranslatedMessageDTO:
-        user_info = self.identity_provider.get_identification_data()
+        user_info = self.identity_provider.identify()
 
         result = await self.translator.translate(
             text=command_data.text,

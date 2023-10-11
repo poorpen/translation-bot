@@ -14,6 +14,6 @@ class CheckExistQuery:
         self.identity_provider = identity_provider
 
     async def __call__(self, *args, **kwargs) -> bool:
-        user_info = self.identity_provider.get_identification_data()
+        user_info = self.identity_provider.identify()
 
         return await self.db_gateway.user_reader.check_exist(user_info.user_id)

@@ -1,4 +1,2 @@
-from .identity_provider import IdentityProvider
+from .telegram import TelegramIdentityProvider
 
-
-__all__ = ["IdentityProvider"]

@@ -160,3 +160,4 @@ cython_debug/
 #.idea/
 
 docker-compose-local.yaml
+.idea

@@ -17,7 +17,7 @@ class AddUserCommand:
         self.identity_provider = identity_provider
 
     async def __call__(self, command_data: AddUser) -> None:
-        user_info = self.identity_provider.get_identification_data()
+        user_info = self.identity_provider.identify()
 
         try:
             await self.db_gateway.user_repo.add_user(

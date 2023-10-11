@@ -11,7 +11,7 @@ async def main():
         level=logging.INFO,
         format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
     )
-    logger.error("Starting bot")
+    logger.info("starting bot")
     config = setup_config()
     bot, dp = parametrize_bot(config)
     await dp.start_polling(bot)

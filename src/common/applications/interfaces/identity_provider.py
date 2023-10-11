@@ -5,5 +5,5 @@ from src.common.applications.models.dto import UserInfoDTO
 
 class IIdentityProvider(Protocol):
 
-    def get_identification_data(self) -> UserInfoDTO:
+    def identify(self) -> UserInfoDTO:
         raise NotImplemented
