@@ -52,9 +52,4 @@ async def session_factory(postgres_url: str):
 async def session(session_factory: async_sessionmaker) -> AsyncGenerator:
     async with session_factory() as session_:
         yield session_
-
-
-@pytest_asyncio.fixture(autouse=True)
-async def rollback(session: AsyncSession):
-    yield
-    await session.rollback()
+        await session_.rollback()

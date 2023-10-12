@@ -44,8 +44,8 @@ services:
     build:
       context: .
     environment:
-      - BOT_TOKEN=bot_token
-      - AUTH_KEY=auth_key
+      - BOT_TOKEN=5427974539:AAHCyXu9Rc0ei7inXU0-kUhVUyNidTDAGJA
+      - AUTH_KEY=785ab953-03f2-6e8a-2b25-1e78abe9a1a0:fx
       - DBMS=postgresql
       - DRIVER=asyncpg
       - DB_NAME=db_name
