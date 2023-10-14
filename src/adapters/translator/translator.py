@@ -16,10 +16,10 @@ class DeepLTranslator(ITranslator):
 
     async def translate(self, text: str, target_lang: str, source_lang: str) -> TranslatedMessageDTO:
         data = {"text": [text], "target_lang": target_lang, "source_lang": source_lang}
-        resp = await self._client.post("/v2/translate", json=data)
-        self._check_code(resp.status)
-        resp_data = await resp.json()
-        return to_result(resp_data)
+        async with self._client.post("/v2/translate", json=data) as resp:
+            self._check_code(resp.status)
+            resp_data = await resp.json()
+            return to_result(resp_data)
 
     async def __aenter__(self):
         return self
